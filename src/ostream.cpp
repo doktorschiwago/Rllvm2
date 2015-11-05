@@ -24,11 +24,11 @@ R_new_raw_string_ostream(SEXP r_str)
 
 extern "C"
 SEXP
-R_new_formatted_raw_ostream(SEXP r_stream, SEXP r_delete)
+R_new_formatted_raw_ostream(SEXP r_stream)
 {
 
     llvm::raw_ostream *stream =  GET_REF(r_stream, raw_ostream);
-    llvm::formatted_raw_ostream *ans = new llvm::formatted_raw_ostream(*stream, LOGICAL(r_delete)[0]);
+    llvm::formatted_raw_ostream *ans = new llvm::formatted_raw_ostream(*stream);
     return(R_createRef(ans, "formatted_raw_ostream"));
 }
 

@@ -9,7 +9,7 @@ function(filename)
 }
 
 formattedRawOstream =
-function(stream = character(), delete = FALSE, finalize = TRUE)
+function(stream = character(), finalize = TRUE)
 {
   if(is.character(stream)) {
     if(length(stream) && !is(stream, "AsIs"))
@@ -18,7 +18,7 @@ function(stream = character(), delete = FALSE, finalize = TRUE)
        stream = rawStringOstream(stream)
   }
 
-  ans = .Call("R_new_formatted_raw_ostream", stream, as.logical(delete))
+  ans = .Call("R_new_formatted_raw_ostream", stream)
 
   if(finalize)
        # could allow the caller to specify their own routine for the finalizer.

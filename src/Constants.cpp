@@ -68,7 +68,7 @@ R_Constant_getGetElementPtr( SEXP r_constant, SEXP r_index, SEXP r_inBounds) // 
         idx.push_back(GET_REF(VECTOR_ELT(r_index, i), Constant));
 //       idx.push_back(llvm::ConstantInt::get(*ctxt, llvm::APInt(32, llvm::StringRef("0"), 10)));
 
-    ans = llvm::ConstantExpr::getGetElementPtr(cons, idx, LOGICAL(r_inBounds)[0]);
+    ans = llvm::ConstantExpr::getGetElementPtr(NULL, cons, idx, LOGICAL(r_inBounds)[0]);
 
     return(R_createRef(ans, "Constant"));
 }

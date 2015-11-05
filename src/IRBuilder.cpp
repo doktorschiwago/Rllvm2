@@ -945,7 +945,7 @@ R_IRBuilder_CreateStructGEP(SEXP r_builder, SEXP r_value, SEXP r_index, SEXP r_i
     builder = GET_REF(r_builder, IRBuilder<>);
     llvm::Value *ans, *value;
     value = GET_REF(r_builder, Value);
-    ans = builder->CreateStructGEP(value,  INTEGER(r_index)[0]);
+    ans = builder->CreateStructGEP(NULL, value,  INTEGER(r_index)[0]);
     if(Rf_length(r_id)) 
         ans->setName(makeTwine(r_id));
 

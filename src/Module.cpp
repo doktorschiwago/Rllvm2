@@ -195,7 +195,7 @@ R_showModule(SEXP r_module, SEXP asString)
     verifyModule(*Mod); //XXX Check
 #endif
 
-    llvm::PassManager PM;
+    llvm::legacy::PassManager PM;
     std::string str;
     llvm::raw_string_ostream to(str);
 #if LLVM_VERSION == 3 && LLVM_MINOR_VERSION < 5
@@ -232,7 +232,7 @@ R_Module_getDataLayout(SEXP r_module)
 #if LLVM_VERSION == 3 && LLVM_MINOR_VERSION < 5
     const char *str = mod->getDataLayout().c_str();
 #else
-    const char *str = mod->getDataLayout()->getStringRepresentation().c_str();
+    const char *str = mod->getDataLayout().getStringRepresentation().c_str();
 #endif
 
     return(str ? ScalarString(mkChar(str)) : NEW_CHARACTER(0));
@@ -374,12 +374,14 @@ R_ParseAssemblyString(SEXP r_str, SEXP r_module, SEXP r_context)
 
     const char *text = CHAR(STRING_ELT(r_str, 0));
 #if LLVM_VERSION ==3 && LLVM_MINOR_VERSION >= 6
-    module = llvm::parseAssemblyString(text, /* module, */ err, *context).get();
+    module = llvm::parseAssemblyString(text, /* module, */ err, *context).release();
 #else
     module = llvm::ParseAssemblyString(text, module, err, *context);
 #endif
     if(!module) {
-        PROBLEM  "problem reading assembler code"
+	Rprintf("%s\n", err.getLineContents());
+	Rprintf("%s\n", err.getMessage());
+	PROBLEM  "problem reading assembler code"
             ERROR;
     }
     return(R_createRef(module, "Module"));
@@ -501,7 +503,7 @@ R_ParseBitcodeFile(SEXP r_input, SEXP r_context)
 #else
 //XXX CHECK!
 #if LLVM_VERSION ==3 && LLVM_MINOR_VERSION >= 6
-    llvm::ErrorOr<llvm::Module *> err =  llvm::parseBitcodeFile(buf->getMemBufferRef(), *context);
+    llvm::ErrorOr<std::unique_ptr<llvm::Module>> err =  llvm::parseBitcodeFile(buf->getMemBufferRef(), *context);
 #else
     llvm::ErrorOr<llvm::Module *> err =  llvm::parseBitcodeFile(buf, *context);
 #endif
@@ -509,7 +511,7 @@ R_ParseBitcodeFile(SEXP r_input, SEXP r_context)
         PROBLEM "failed to read bitcode %s", err.getError().message().c_str()
          ERROR;
     }
-    ans = err.get();
+    ans = err.get().release();
 #endif
 
     return(R_createRef(ans, "Module"));    

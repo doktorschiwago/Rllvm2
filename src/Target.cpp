@@ -1,6 +1,6 @@
 #include "Rllvm.h"
 #include <llvm/Support/TargetRegistry.h>
-#include <llvm/Target/TargetLibraryInfo.h>
+#include <llvm/Analysis/TargetLibraryInfo.h>
 #include <llvm/Target/TargetMachine.h>
 
 // Don't need this - do now - and not in same place on Linux setup.
@@ -47,7 +47,7 @@ R_Target_createTargetMachine(SEXP r_target, SEXP r_triple, SEXP r_cpu, SEXP r_fe
     else  {
         /* taken from Halide's CodeGen.cpp */
         defaultOpts.LessPreciseFPMADOption = true;
-        defaultOpts.NoFramePointerElim = false;
+        //defaultOpts.NoFramePointerElim = false;
 #ifdef LLVM_HAS_NOFRAMEPOINTERELIMNONLEAF
         defaultOpts.NoFramePointerElimNonLeaf = false;
 #endif
@@ -56,16 +56,16 @@ R_Target_createTargetMachine(SEXP r_target, SEXP r_triple, SEXP r_cpu, SEXP r_fe
         defaultOpts.NoInfsFPMath = true;
         defaultOpts.NoNaNsFPMath = true;
         defaultOpts.HonorSignDependentRoundingFPMathOption = false;
-        defaultOpts.UseSoftFloat = false;
+        //defaultOpts.UseSoftFloat = false;
         defaultOpts.FloatABIType = llvm::FloatABI::Soft;
         defaultOpts.NoZerosInBSS = false;
         defaultOpts.GuaranteedTailCallOpt = false;
-        defaultOpts.DisableTailCalls = false;
+        //defaultOpts.DisableTailCalls = false;
         defaultOpts.StackAlignmentOverride = 32;
 #ifdef LLVM_HAS_REALIGNSTACK
         defaultOpts.RealignStack = true;
 #endif
-        defaultOpts.TrapFuncName = "";
+        //defaultOpts.TrapFuncName = "";
         defaultOpts.PositionIndependentExecutable = true;
 
 #if LLVM_VERSION == 3 && LLVM_MINOR_VERSION < 5
@@ -85,16 +85,17 @@ R_Target_createTargetMachine(SEXP r_target, SEXP r_triple, SEXP r_cpu, SEXP r_fe
     return(R_createRef(ans, "TargetMachine"));
 }
 
+/*
 extern "C"
 SEXP
 R_TargetLibraryInfo_new(SEXP r_triple)
 {
 //    std::string triple(CHAR(STRING_ELT(r_triple, 0)));
     llvm::Triple triple(CHAR(STRING_ELT(r_triple, 0)));
-    llvm::TargetLibraryInfo *ans = new llvm::TargetLibraryInfo(triple);
+    llvm::TargetLibraryInfo *ans = new llvm::TargetLibraryInfo(new llvm::TargetLibraryInfoImpl(triple));
     return(R_createRef(ans, "TargetLibraryInfo"));
 }
-
+*/
 
 
 
@@ -119,31 +120,33 @@ R_DataLayout_getStringRepresentation(SEXP r_dl)
 }
 
 
-
+/*
 extern "C"
 SEXP
 R_TargetMachine_addAnalysisPasses(SEXP r_targetMachine, SEXP r_passManager)
 {
     llvm::TargetMachine *targetMachine = GET_REF(r_targetMachine, TargetMachine);
-    llvm::PassManager *passManager = GET_REF(r_passManager, PassManager);
+    llvm::legacy::PassManager *passManager = GET_REF(r_passManager, legacy::PassManager);
     targetMachine->addAnalysisPasses(*passManager);
 
     return(R_NilValue);
 }
-
+*/
+/*
 extern "C"
 SEXP
 R_TargetMachine_addPassesToEmitFile(SEXP r_targetMachine, SEXP r_passManager, SEXP r_out, SEXP r_fileType)
 {
     llvm::TargetMachine *targetMachine = GET_REF(r_targetMachine, TargetMachine);
-    llvm::PassManager *passManager = GET_REF(r_passManager, PassManager);
+    llvm::legacy::PassManager *passManager = GET_REF(r_passManager, legacy::PassManager);
     llvm::formatted_raw_ostream *out;
     out = GET_REF(r_out, formatted_raw_ostream);
 
     bool ans = targetMachine->addPassesToEmitFile(*passManager, *out, (llvm::TargetMachine::CodeGenFileType) INTEGER(r_fileType)[0]);
-    /* ans is true if addPasses... failed */
+    // ans is true if addPasses... failed 
     return(ScalarLogical(ans == true));
 }
+*/
 
 extern "C"
 SEXP

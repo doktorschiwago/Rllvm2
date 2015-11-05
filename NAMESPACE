@@ -117,6 +117,7 @@ FCMP_ULT,
 FCMP_UNE,
 FCMP_UNO,
 FDiv,
+finalizeEngine,
 FIRST_FCMP_PREDICATE,
 FIRST_ICMP_PREDICATE,
 FloatPtrType,
@@ -189,7 +190,8 @@ exportMethods(Optimize)
 
 export(setLinkage)
 
-export(findFunction, getPointerToFunction)
+export(findFunction, getPointerToFunction, 
+	getNativePointerToFunction)
 
 export(createDoubleConstant)
 

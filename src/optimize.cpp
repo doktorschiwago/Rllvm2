@@ -23,7 +23,7 @@ R_getPassManager(SEXP r_module, SEXP r_ee, SEXP r_level)
   llvm::Module *TheModule = GET_REF(r_module, Module);
   llvm::ExecutionEngine *TheExecutionEngine = NULL;
 
-  llvm::FunctionPassManager *mgr = new llvm::FunctionPassManager(TheModule);
+  llvm::legacy::FunctionPassManager *mgr = new llvm::legacy::FunctionPassManager(TheModule);
 
   if(r_ee != R_NilValue) {
      TheExecutionEngine = GET_REF(r_ee, ExecutionEngine);
@@ -61,7 +61,7 @@ extern "C"
 SEXP
 R_optimizeFunction(SEXP r_func, SEXP r_passMgr)
 {
-  llvm::FunctionPassManager *mgr = GET_REF(r_passMgr, FunctionPassManager);
+  llvm::legacy::FunctionPassManager *mgr = GET_REF(r_passMgr, legacy::FunctionPassManager);
   llvm::Function *func = GET_REF(r_func, Function);
   mgr->run(*func);
   return(ScalarLogical(TRUE));
@@ -72,20 +72,19 @@ extern "C"
 SEXP
 R_PassManager_run(SEXP r_passMgr, SEXP r_module)
 {
-  llvm::PassManager *mgr = GET_REF(r_passMgr, PassManager);
+  llvm::legacy::PassManager *mgr = GET_REF(r_passMgr, legacy::PassManager);
   llvm::Module *module = GET_REF(r_module, Module);
   mgr->run(*module);
   return(ScalarLogical(TRUE));
 }
 
 
-#include <llvm/PassManager.h>
 
 extern "C"
 SEXP
 R_PassManagerBase_Add(SEXP r_mgr, SEXP r_pass)
 {
-    llvm::PassManagerBase *mgr = GET_REF(r_mgr, PassManagerBase);
+    llvm::legacy::PassManagerBase *mgr = GET_REF(r_mgr, legacy::PassManagerBase);
     llvm::Pass *pass = GET_REF(r_pass, Pass);
     mgr->add(pass);
     return(ScalarLogical(TRUE));
@@ -99,10 +98,10 @@ R_PassManager_new(SEXP r_mod, SEXP r_fnMgr)
 {
     if(LOGICAL(r_fnMgr)[0]) {
         llvm::Module *mod = GET_REF(r_mod, Module);
-        llvm::FunctionPassManager *fm = new llvm::FunctionPassManager(mod);
+        llvm::legacy::FunctionPassManager *fm = new llvm::legacy::FunctionPassManager(mod);
         return(R_createRef(fm, "FunctionPassManager"));
     } else {
-        llvm::PassManager *m = new llvm::PassManager();        
+        llvm::legacy::PassManager *m = new llvm::legacy::PassManager();        
         return(R_createRef(m, "PassManager"));
     }
 }

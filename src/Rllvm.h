@@ -28,7 +28,6 @@
 #include <llvm/Support/FormattedStream.h>
 #include <llvm/Support/MathExtras.h>
 #include <llvm/Pass.h>
-#include <llvm/PassManager.h>
 #include <llvm/ADT/SmallVector.h>
 
 
@@ -38,6 +37,12 @@
 #else
 #include <llvm/Analysis/Verifier.h>
 #include <llvm/Assembly/PrintModulePass.h>
+#endif
+
+#if LLVM_VERSION >=3 && LLVM_MINOR_VERSION >= 7
+#include <llvm/IR/LegacyPassManager.h>
+#else
+#include <llvm/PassManager.h>
 #endif
 
 
@@ -78,8 +83,13 @@ extern llvm::Twine makeTwine(SEXP);
    R_##TYPE##_eraseFromParent(SEXP r_block, SEXP r_delete) \
    { \
       llvm::TYPE  *block = GET_REF(r_block, TYPE);	\
-      if(block) \
-          LOGICAL(r_delete)[0] ? block->eraseFromParent() : block->removeFromParent(); \
+	if(block) { \
+      	if (LOGICAL(r_delete)[0]) { \
+			block->eraseFromParent(); \
+	 	} else { \
+			block->removeFromParent();  \
+		} \
+	} \
       return(ScalarLogical(block != NULL));				\
    }
 
