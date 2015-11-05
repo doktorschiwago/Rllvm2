@@ -215,6 +215,7 @@ ExternalWeakLinkage,
 CommonLinkage)
 
 export(llvmAddSymbol, llvmLoadDLL)
+export(getSymbol, addGlobalMapping)
 
 
 export(createGlobalString, createIsNull, createIsNotNull, createSelect,
@@ -489,4 +490,6 @@ export(replaceAllUsesWith)
 export(replaceUsesOfWith)
 exportMethods("length")
 exportMethods("[[")
+
+export(getLinkage)
 

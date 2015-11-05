@@ -1,4 +1,5 @@
 #include "Rllvm.h"
+#include <dlfcn.h>
 
 void *
 getRReference(SEXP val)
@@ -63,4 +64,29 @@ void
 printInt(int i)
 {
     REprintf("%d\n", i);
+}
+
+extern "C"
+SEXP
+getSymbol(SEXP r_symbol)
+{
+	const char *symbol = CHAR(STRING_ELT(r_symbol, 0));
+
+	char *error;
+
+	dlerror();
+
+    void* res = dlsym(RTLD_DEFAULT,symbol);
+
+
+	if ((error = dlerror()) != NULL)  {
+        return(ScalarLogical(FALSE));
+    }
+
+	char res2[100];
+
+	sprintf(&res2[0], "%p",res);
+
+	return(mkString(res2));
+
 }

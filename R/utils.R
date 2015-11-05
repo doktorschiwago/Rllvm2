@@ -38,3 +38,7 @@ function(file, args, march = "nvptx64", out = NA)
     args = c(args,  "-o", out)
   .C("R_llc", length(args), args)[[1]]
 }
+
+getSymbol = function(symbol) {
+	return(.Call("getSymbol", symbol))
+}

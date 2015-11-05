@@ -171,6 +171,12 @@ function(var, exec, type = getType(var))
    .Call("R_convertNativeValuePtrToR", ptr@ref, ty)
 }
 
+addGlobalMapping =
+function(execEngine, var, addr)
+{
+   .Call("R_ExecutionEngine_addGlobalMapping", execEngine, var, addr)
+}
+
 
 
 getVerifyModules =
