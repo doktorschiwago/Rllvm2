@@ -493,3 +493,13 @@ exportMethods("[[")
 
 export(getLinkage)
 
+
+export(DIBuilder,
+	finalizeDIBuilder,
+	newDebugCU,
+	newDebugFunction,
+	newDebugLocalVariable,
+	newDebugBasicType,
+	newDebugFunctionType,
+	newDebugPointerType,
+	debugSetLocation)
