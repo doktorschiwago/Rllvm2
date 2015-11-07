@@ -439,15 +439,6 @@ function(builder, vec, elt, idx)
    .Call("R_IRBuilder_CreateInsertElement", builder, vec, elt, idx)
 }
 
-
-createPHI =
-function(builder, type, numReservedVals)
-{
-   .Call("R_IRBuilder_CreatePHI", builder, type, as.integer(numReservedVals))
-}
-
-
-
 if(FALSE) {
 # Old version < 3.4
 CastOps = structure(33:44, .Names = c("Trunc", "ZExt", "SExt", "FPToUI",
@@ -508,10 +499,15 @@ function(builder, value, type, id = "")
   .Call("R_IRBuilder_CreateTrunc", as(builder, "IRBuilder"), as(value, "Value"), as(type, "Type"), as.character(id))
 }
 
+PHIAddIncoming =
+function(phiNode, value, block)
+{
+   .Call("R_PHINode_addIncoming", phiNode, value, block)
+}
 
 
 createPhi = createPHI =
-function(build, type, numReservedValues, id = character())
+function(builder, type, numReservedValues, id = character())
 {
   .Call("R_IRBuilder_CreatePHI", as(builder, "IRBuilder"), as(type, "Type"), as.integer(numReservedValues), as.character(id))
 }

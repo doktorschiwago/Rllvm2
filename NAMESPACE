@@ -494,6 +494,8 @@ exportMethods("[[")
 export(getLinkage)
 
 
+export(PHIAddIncoming)
+
 export(DIBuilder,
 	finalizeDIBuilder,
 	newDebugCU,
