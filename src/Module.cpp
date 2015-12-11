@@ -572,3 +572,14 @@ R_Module_getNamedMDList(SEXP r_mod)
   return(rans);
 }
 
+extern "C"
+SEXP
+R_Module_getType(SEXP r_mod, SEXP r_name)
+{
+	llvm::Module *mod = GET_REF(r_mod, Module);
+	llvm::Type *ans = mod->getTypeByName(CHAR(STRING_ELT(r_name, 0)));
+
+	if (ans==NULL) return(R_NilValue);
+
+	return(R_createRef(ans, "Type"));
+}

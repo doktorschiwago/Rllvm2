@@ -196,6 +196,7 @@ export(findFunction, getPointerToFunction,
 export(createDoubleConstant)
 
 export(showModule)
+export(getTypeInModule)
 
 
 

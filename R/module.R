@@ -266,3 +266,9 @@ setMethod("setDataLayout", "Module",
           function(x, value,  ...) {
 	   .Call("R_Module_setDataLayout", x, as(value, "character"))
           })
+
+getTypeInModule=
+function(mod, typeName)
+{
+	.Call("R_Module_getType", mod, typeName)
+}
