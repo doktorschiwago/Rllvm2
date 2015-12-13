@@ -20,7 +20,13 @@ R_CallInst_getCalledFunction(SEXP r_call)
 
     llvm::Function *fun = call->getCalledFunction();
 
-    return(R_createRef(fun, "Function"));
+	/* getCalledFunction returns NULL for indirect calls */
+	if (fun) {
+    	return(R_createRef(fun, "Function"));
+	} else {
+		return(R_NilValue);
+	}
+
 }
 
 extern "C"
