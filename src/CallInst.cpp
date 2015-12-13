@@ -31,6 +31,20 @@ R_CallInst_getCalledFunction(SEXP r_call)
 
 extern "C"
 SEXP
+R_CallInst_setCalledFunction(SEXP r_call, SEXP r_func)
+{
+    llvm::CallInst *call = GET_REF(r_call, CallInst);
+
+    llvm::Function *fun = GET_REF(r_func, Function);
+
+	call->setCalledFunction(fun);
+
+	return(R_NilValue);
+
+}
+
+extern "C"
+SEXP
 R_CallInst_addAttribute(SEXP r_call, SEXP r_which, SEXP r_attrVal)
 {
     llvm::CallInst *call = GET_REF(r_call, CallInst);

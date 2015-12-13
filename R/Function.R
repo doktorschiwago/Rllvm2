@@ -274,3 +274,15 @@ function(fun)
 {
   .Call("R_Function_isVarArg", as(fun, "Function"))
 }
+
+cloneFunction =
+function(func)
+{
+  .Call("R_Function_clone", as(func, "Function"))
+}
+
+setCalledFunction =
+function(call, func)
+{
+	.Call("R_CallInst_getCalledFunction", call, func)
+}

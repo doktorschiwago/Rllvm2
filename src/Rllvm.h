@@ -45,6 +45,8 @@
 #include <llvm/PassManager.h>
 #endif
 
+#include <llvm/Transforms/Utils/Cloning.h>
+
 
 #include <Rdefines.h>
 

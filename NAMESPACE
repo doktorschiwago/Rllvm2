@@ -233,6 +233,7 @@ export(getBlocks)
 export(getTerminator)
 export(getGlobalVariable)
 export(getCalledFunction, getReturnType, getType, getTypeID)
+export(cloneFunction, setCalledFunction)
 export(getElementType)
 
 
