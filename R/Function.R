@@ -284,5 +284,5 @@ function(func)
 setCalledFunction =
 function(call, func)
 {
-	.Call("R_CallInst_getCalledFunction", call, func)
+	.Call("R_CallInst_setCalledFunction", call, func)
 }
