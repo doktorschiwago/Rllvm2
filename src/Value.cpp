@@ -56,8 +56,12 @@ SEXP
 R_Type_dump(SEXP r_val)
 {
     llvm::Type *type = GET_TYPE(r_val);
-    type->dump();
-    return(R_NilValue);
+
+    std::string str;
+    llvm::raw_string_ostream OS(str);
+
+    type->print(OS);
+    return(ScalarString(mkChar( OS.str().c_str())));
 }
 
 
@@ -66,8 +70,11 @@ SEXP
 R_Value_dump(SEXP r_val)
 {
     llvm::Value *val = GET_REF(r_val, Value);
-    val->dump();
-    return(R_NilValue);
+    std::string str;
+    llvm::raw_string_ostream OS(str);
+
+    val->print(OS);
+    return(ScalarString(mkChar( OS.str().c_str())));
 }
 
 
