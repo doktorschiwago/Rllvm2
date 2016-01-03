@@ -48,6 +48,8 @@
 #include <llvm/Transforms/Utils/Cloning.h>
 
 
+#include <llvm/IR/CFG.h>
+
 #include <Rdefines.h>
 
 #if LLVM_VERSION >= 3 && LLVM_MINOR_VERSION >= 2

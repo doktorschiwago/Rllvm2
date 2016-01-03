@@ -129,6 +129,35 @@ R_BasicBlock_getPredecessor(SEXP r_block, SEXP r_single)
     return(pre ? R_createRef(pre, "BasicBlock") : R_NilValue);
 }
 
+extern "C"
+SEXP
+R_BasicBlock_getPredecessors(SEXP r_block)
+{
+    llvm::BasicBlock *block = GET_REF(r_block, BasicBlock);
+    int n = 0;
+    int i = 0;
+    SEXP rans, names;
+
+	for (llvm::pred_iterator PI = llvm::pred_begin(block), E = llvm::pred_end(block); PI != E; ++PI) {
+	  	n++;
+	}
+
+    PROTECT(rans = NEW_LIST(n));
+    PROTECT(names = NEW_CHARACTER(n));
+
+
+	for (llvm::pred_iterator PI = llvm::pred_begin(block), E = llvm::pred_end(block); PI != E; ++PI, i++) {
+	  	llvm::BasicBlock *Pred = *PI;
+        SET_STRING_ELT(names, i, mkChar(Pred->getName().data()));
+        SET_VECTOR_ELT(rans, i, R_createRef(Pred, "BasicBlock"));
+	}
+
+
+    SET_NAMES(rans, names);
+
+    UNPROTECT(2);
+    return(rans);
+}
 
 #if 0
 

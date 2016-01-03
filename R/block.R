@@ -138,3 +138,9 @@ function(x, single = TRUE)
 {
   .Call("R_BasicBlock_getPredecessor", as(x, "BasicBlock"), as.logical(single)) 
 }
+
+getPredecessors =
+function(x)
+{
+  .Call("R_BasicBlock_getPredecessors", as(x, "BasicBlock")) 
+}
