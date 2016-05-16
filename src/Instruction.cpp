@@ -215,6 +215,11 @@ R_Instruction_moveBefore(SEXP r_base, SEXP r_inst)
     return(R_NilValue);
 }
 
-
-
+extern "C"
+SEXP
+R_AllocaInst_new(SEXP r_type)
+{
+    llvm::Type *type = GET_REF(r_type, Type);
+    return(R_createRef(new llvm::AllocaInst(type), "AllocaInst"));
+}
 

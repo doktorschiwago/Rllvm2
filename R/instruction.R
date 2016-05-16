@@ -79,6 +79,9 @@ function(inst, to)
  .Call("R_Instruction_moveBefore", as(inst, "Instruction"), as(to, "Instruction"))
 }
 
+newAllocaInst = function(type) {
+	.Call("R_AllocaInst_new", as(type, "Type"))
+}
 
 setGeneric("removeFromParent", 
            function(inst, ...)
