@@ -31,7 +31,7 @@ function(val, other)
   .Call("R_Value_replaceAllUsesWith", as(val, "Value"), as(other, "Value"))    
 
 getAllUses = 
-function(obj)
-    .Call("R_Value_getAllUses", as(obj, "Value"))
-
+function(obj) {
+    coerceGenericInstruction(.Call("R_Value_getAllUses", as(obj, "Value")), throwError=FALSE)
+}
 
