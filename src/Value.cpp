@@ -93,17 +93,23 @@ SEXP
 R_Value_getAllUses(SEXP r_val)
 {
     llvm::Value *val = GET_REF(r_val, Value);
-    llvm::Value::use_iterator ib = val->use_begin(), ie = val->use_end();
+    //llvm::Value::use_iterator ib = val->use_begin(), ie = val->use_end();
     int ctr = 0;
-    for( ; ib != ie; ib++, ctr++) {}
+    for(llvm::User *U : val->users()) {
+		ctr++;
+	}
 
     SEXP ans;
     PROTECT(ans = NEW_LIST(ctr));
-    ib = val->use_begin();
-    ie = val->use_end();
-    for(ctr = 0 ; ib != ie ; ib++, ctr++)  {
-        llvm::Use &u = *ib;
-        SET_VECTOR_ELT(ans, ctr, R_createRef(u, "Use"));
+    //ib = val->use_begin();
+    //ie = val->use_end();
+	ctr=0;
+    for(llvm::User *U : val->users()) {
+        //llvm::Use &u = *ib;
+		//llvm::Value *val2 = U;
+		
+        SET_VECTOR_ELT(ans, ctr, R_createRef(U, "User"));
+		ctr++;
     }
 
     
