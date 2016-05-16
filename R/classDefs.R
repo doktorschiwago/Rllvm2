@@ -134,7 +134,6 @@ setClass("CHARSXPType", contains = "SEXPType")
 
 
 
-setClass("User", contains = "Value")
 setClass("Constant", contains = "User")
 setClass("ConstantAggregateZero", contains = "Constant")
 setClass("ConstantInt", contains = "Constant")
