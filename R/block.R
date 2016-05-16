@@ -72,17 +72,22 @@ structure(c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 11L, 12L,
 
 
 coerceGenericInstruction =
-function(ins)
+function(ins, throwError=TRUE)
 {
-  if(is.list(ins))
-    return(lapply(ins, coerceGenericInstruction))
+  	if(is.list(ins))
+    	return(lapply(ins, coerceGenericInstruction))
 
-  type = getOpcode(ins)
-  k = InstructionOpcodeClass[ names(type) ]
-  if(is.na(k))
-    stop("cannot mape op code for instruction to R class")
+  	type = getOpcode(ins)
+  	k = InstructionOpcodeClass[ names(type) ]
+  	if(is.na(k)) {
+		if (throwError) {
+    		stop("cannot mape op code for instruction to R class")
+		} else {
+			return(ins)
+		}
+  	}
   
-  as(ins, k)
+  	as(ins, k)
 }
 
 
