@@ -48,6 +48,9 @@
 #include <llvm/Transforms/Utils/Cloning.h>
 
 
+#include <llvm/Analysis/TargetLibraryInfo.h>
+#include <llvm/Support/TargetRegistry.h>
+#include <llvm/Analysis/TargetTransformInfo.h>
 #include <llvm/IR/CFG.h>
 
 #include <Rdefines.h>

@@ -101,3 +101,21 @@ function()
 createPartiallyInlineLibCallsPass =
 function()
    .Call('R_createPartiallyInlineLibCallsPass')
+
+createSCCPPass =
+function()
+   .Call('R_createSCCPPass')
+
+createAlwaysInlinerPass =
+function()
+   .Call('R_createAlwaysInlinerPass')
+
+createUnifyFunctionExitNodesPass =
+function()
+   .Call('R_createUnifyFunctionExitNodesPass')
+
+
+createStripDeadDebugInfoPass =
+function()
+   .Call('R_createStripDeadDebugInfoPass')
+

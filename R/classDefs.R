@@ -208,7 +208,7 @@ setClass("TargetLibraryInfo", contains = "RC++Reference")
 
 setClass("PassRegistry", contains = "RC++Reference")
 setClass("Pass", contains = "RC++Reference")
-setClass("FunctionPass", contains = "RC++Reference")
+setClass("FunctionPass", contains = "Pass")
 setClass("ImmutablePass", contains = "Pass")
 setClass("DataLayout", contains = "ImmutablePass") 
 

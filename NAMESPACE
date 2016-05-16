@@ -187,6 +187,8 @@ export(createGlobalVariable, createGlobalVar)
 export(Optimize)
 exportMethods(Optimize)
 
+export(optimizeFunction)
+
 
 export(setLinkage)
 
@@ -467,6 +469,8 @@ export( createAggressiveDCEPass,
   createLoopDeletionPass,
   createCorrelatedValuePropagationPass,
   createPartiallyInlineLibCallsPass )
+
+export(createSCCPPass, createAlwaysInlinerPass, createUnifyFunctionExitNodesPass, createStripDeadDebugInfoPass)
 
 export(shutdown)
 

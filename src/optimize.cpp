@@ -63,8 +63,7 @@ R_optimizeFunction(SEXP r_func, SEXP r_passMgr)
 {
   llvm::legacy::FunctionPassManager *mgr = GET_REF(r_passMgr, legacy::FunctionPassManager);
   llvm::Function *func = GET_REF(r_func, Function);
-  mgr->run(*func);
-  return(ScalarLogical(TRUE));
+  return(ScalarLogical(mgr->run(*func)));
 }
 
 
@@ -74,8 +73,7 @@ R_PassManager_run(SEXP r_passMgr, SEXP r_module)
 {
   llvm::legacy::PassManager *mgr = GET_REF(r_passMgr, legacy::PassManager);
   llvm::Module *module = GET_REF(r_module, Module);
-  mgr->run(*module);
-  return(ScalarLogical(TRUE));
+  return(ScalarLogical(mgr->run(*module)));
 }
 
 
@@ -90,18 +88,103 @@ R_PassManagerBase_Add(SEXP r_mgr, SEXP r_pass)
     return(ScalarLogical(TRUE));
 }
 
+/*
+// Returns the TargetMachine instance or zero if no triple is provided.
+static TargetMachine* GetTargetMachine(Triple TheTriple, StringRef CPUStr,
+                                       StringRef FeaturesStr,
+                                       const TargetOptions &Options) {
+  std::string Error;
+	
+  const llvm::Target *TheTarget = llvm::TargetRegistry::lookupTarget(MArch, TheTriple,
+                                                         Error);
+  // Some modules don't specify a triple, and this is okay.
+  if (!TheTarget) {
+    return nullptr;
+  }
+
+  return TheTarget->createTargetMachine(TheTriple.getTriple(),
+                                        CPUStr, FeaturesStr, Options,
+                                        RelocModel, CMModel,
+                                        llvm::CodeGenOpt::None);
+}*/
 
 
 extern "C"
 SEXP
 R_PassManager_new(SEXP r_mod, SEXP r_fnMgr)
 {
+	llvm::Module *mod = GET_REF(r_mod, Module);\
+
     if(LOGICAL(r_fnMgr)[0]) {
-        llvm::Module *mod = GET_REF(r_mod, Module);
         llvm::legacy::FunctionPassManager *fm = new llvm::legacy::FunctionPassManager(mod);
         return(R_createRef(fm, "FunctionPassManager"));
     } else {
-        llvm::legacy::PassManager *m = new llvm::legacy::PassManager();        
-        return(R_createRef(m, "PassManager"));
+        llvm::legacy::PassManager *m = new llvm::legacy::PassManager();  
+
+/*
+		llvm::Triple ModuleTriple(mod->getTargetTriple());
+		std::string CPUStr, FeaturesStr;
+		llvm::TargetMachine *Machine = nullptr;
+    	CPUStr = getCPUStr();
+    	FeaturesStr = getFeaturesStr();
+		const llvm::TargetOptions Options = InitTargetOptionsFromCodeGenFlags();
+
+
+		Machine = GetTargetMachine(ModuleTriple, CPUStr, FeaturesStr, Options);
+
+
+		std::unique_ptr<llvm::TargetMachine> TM(Machine);
+ 
+
+	  	// Add an appropriate TargetLibraryInfo pass for the module's triple.
+	  	llvm::TargetLibraryInfoImpl TLII(ModuleTriple);
+
+	  	m->add(new llvm::TargetLibraryInfoWrapperPass(TLII));
+
+
+	  	// Add internal analysis passes from the target machine.
+	  	m->add(createTargetTransformInfoWrapperPass(TM ? TM->getTargetIRAnalysis()
+		                                                 : TargetIRAnalysis()));
+
+*/     
+		SEXP res=R_createRef(m, "PassManager");
+        return(res);
     }
+}
+
+extern "C"
+SEXP
+R_FunctionPassManager_DoInit(SEXP r_mgr, SEXP r_pass)
+{
+    llvm::legacy::FunctionPassManager *mgr = GET_REF(r_mgr, legacy::FunctionPassManager);
+    mgr->doInitialization();
+    return(ScalarLogical(TRUE));
+}
+
+extern "C"
+SEXP
+R_Pass_Initialize()
+{
+  llvm::PassRegistry &Registry = *llvm::PassRegistry::getPassRegistry();
+  llvm::initializeCore(Registry);
+  llvm::initializeScalarOpts(Registry);
+  llvm::initializeObjCARCOpts(Registry);
+  llvm::initializeVectorization(Registry);
+  llvm::initializeIPO(Registry);
+  llvm::initializeAnalysis(Registry);
+  llvm::initializeIPA(Registry);
+  llvm::initializeTransformUtils(Registry);
+  llvm::initializeInstCombine(Registry);
+  llvm::initializeInstrumentation(Registry);
+  llvm::initializeTarget(Registry);
+  // For codegen passes, only passes that do IR to IR transformation are
+  // supported.
+  llvm::initializeCodeGenPreparePass(Registry);
+  llvm::initializeAtomicExpandPass(Registry);
+  llvm::initializeRewriteSymbolsPass(Registry);
+  llvm::initializeWinEHPreparePass(Registry);
+  llvm::initializeDwarfEHPreparePass(Registry);
+  llvm::initializeSjLjEHPreparePass(Registry);
+
+	return(R_NilValue);
 }

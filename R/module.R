@@ -50,6 +50,11 @@ setMethod("show", "ModuleDisplay",
               function(object)
                   cat(object))
 
+optimizeFunction =
+function(func, passManager) {
+	.Call("R_optimizeFunction", func, passManager)
+}
+
 showModule =
 function(mod, asString = FALSE)
 {

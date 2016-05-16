@@ -4,6 +4,11 @@ function(mgr, pass)
   .Call("R_PassManagerBase_Add", mgr, pass)
 }
 
+initPass =
+function(mgr)
+{
+  .Call("R_FunctionPassManager_DoInit", mgr)
+}
 
 passManager =
 function(module, functionManager = !missing(module))

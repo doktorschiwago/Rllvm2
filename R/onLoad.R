@@ -23,6 +23,8 @@ function(...)
           c("SEXPType", sprintf("%sSXPType", names(tmp)[-1])),
           tmp, MoreArgs = list(ns = e))
   
-  if(getOption("Rllvm.autoInitialize", TRUE))
+  if(getOption("Rllvm.autoInitialize", TRUE)) {
      InitializeNativeTarget()
+		.Call("R_Pass_Initialize")
+	}
 }
