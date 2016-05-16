@@ -16,7 +16,7 @@ setMethod("getOperand", "Instruction",
           function(instruction, index) {
             if(index < 1)
               stop("don't be silly!")  
-            .Call("R_Instruction_getOperand", as(instruction, "Instruction"), as.integer(index))
+            coerceGenericInstruction(.Call("R_Instruction_getOperand", as(instruction, "Instruction"), as.integer(index)),throwError=FALSE)
           })
 
 setMethod("getNumOperands", "Instruction",
